@@ -1,0 +1,96 @@
+{% extends 'gestion/base.html' %}
+{% block title %}Dashboard - Hotel Paradise{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-0">Panel de Control</h2>
+        <p class="text-muted mb-0">Resumen operativo de Hotel Paradise</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{% url 'consultar_disponibilidad' %}" class="btn btn-outline-dark">
+            <i class="bi bi-search me-1"></i>Consultar Disponibilidad
+        </a>
+        <a href="{% url 'crear_reservacion' %}" class="btn btn-warning fw-semibold">
+            <i class="bi bi-plus-circle me-1"></i>Nueva Reservación
+        </a>
+    </div>
+</div>
+
+<!-- Tarjetas de Estadísticas Obligatorias -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4 col-lg">
+        <div class="card p-3 border border-warning border-3 h-100">
+            <div class="text-muted small fw-semibold">TOTAL CLIENTES</div>
+            <div class="fs-2 fw-bold text-dark">{{ total_clientes }}</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg">
+        <div class="card p-3 border border-warning border-3 h-100">
+            <div class="text-muted small fw-semibold">TOTAL HABITACIONES</div>
+            <div class="fs-2 fw-bold text-dark">{{ total_habitaciones }}</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg">
+        <div class="card p-3 border border-warning border-3 h-100">
+            <div class="text-muted small fw-semibold">HAB. DISPONIBLES</div>
+            <div class="fs-2 fw-bold text-dark">{{ habitaciones_disponibles }}</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg">
+        <div class="card p-3 border border-warning border-3 h-100">
+            <div class="text-muted small fw-semibold">TOTAL RESERVACIONES</div>
+            <div class="fs-2 fw-bold text-dark">{{ total_reservaciones }}</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg">
+        <div class="card p-3 border border-warning border-3 h-100">
+            <div class="text-muted small fw-semibold">INGRESOS GENERADOS</div>
+            <div class="fs-3 fw-bold text-dark">${{ ingresos_generados|floatformat:2 }}</div>
+        </div>
+    </div>
+</div>
+<!-- Últimas Reservaciones -->
+<div class="card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0">Últimas Reservaciones Registradas</h5>
+        <a href="{% url 'lista_reservaciones' %}" class="btn btn-sm btn-link text-decoration-none">Ver todas &rarr;</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#ID</th>
+                    <th>Cliente</th>
+                    <th>Habitación</th>
+                    <th>Entrada</th>
+                    <th>Salida</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in ultimas_reservaciones %}
+                <tr>
+                    <td class="fw-bold">#{{ r.id }}</td>
+                    <td>{{ r.cliente.nombre }} {{ r.cliente.apellidos }}</td>
+                    <td>Hab. #{{ r.habitacion.numero }} ({{ r.habitacion.tipo }})</td>
+                    <td>{{ r.fecha_entrada|date:"d/m/Y" }}</td>
+                    <td>{{ r.fecha_salida|date:"d/m/Y" }}</td>
+                    <td class="fw-semibold">${{ r.total }}</td>
+                    <td>
+                        <span class="badge {% if r.estado == 'Confirmada' %}bg-success{% elif r.estado == 'Pendiente' %}bg-warning text-dark{% elif r.estado == 'Cancelada' %}bg-danger{% else %}bg-secondary{% endif %}">
+                            {{ r.estado }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">Aún no hay reservaciones registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

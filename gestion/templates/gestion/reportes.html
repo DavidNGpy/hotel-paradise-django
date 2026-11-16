@@ -1,0 +1,80 @@
+{% extends 'gestion/base.html' %}
+{% block title %}Reportes y Estadísticas - Hotel Paradise{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-0">Reportes y Estadísticas</h2>
+        <p class="text-muted mb-0">Rendimiento por tipo de habitación y estado de reservaciones</p>
+    </div>
+    <button onclick="window.print()" class="btn btn-outline-dark">
+        <i class="bi bi-printer me-1"></i>Imprimir / PDF
+    </button>
+</div>
+
+<div class="row g-4">
+    <!-- Reporte por Tipo de Habitación -->
+    <div class="col-lg-7">
+        <div class="card p-4 h-100">
+            <h5 class="fw-bold mb-3">Ingresos y Ocupación por Tipo de Habitación</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Tipo de Habitación</th>
+                            <th class="text-center">Habitaciones</th>
+                            <th class="text-center">Reservaciones</th>
+                            <th class="text-end">Ingresos Confirmados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in por_tipo %}
+                        <tr>
+                            <td class="fw-semibold">{{ item.tipo }}</td>
+                            <td class="text-center">{{ item.total_habitaciones }}</td>
+                            <td class="text-center">{{ item.total_reservas }}</td>
+                            <td class="text-end fw-bold text-success">${{ item.ingresos|default:"0.00"|floatformat:2 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Sin datos registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reporte por Estado de Reservación -->
+    <div class="col-lg-5">
+        <div class="card p-4 h-100">
+            <h5 class="fw-bold mb-3">Resumen por Estado de Reservación</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Estado</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-end">Monto Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for est in por_estado %}
+                        <tr>
+                            <td class="fw-semibold">{{ est.estado }}</td>
+                            <td class="text-center">{{ est.cantidad }}</td>
+                            <td class="text-end fw-bold">${{ est.monto|default:"0.00"|floatformat:2 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">Sin reservaciones aún.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
