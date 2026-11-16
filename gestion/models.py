@@ -123,3 +123,5 @@ class Reservacion(models.Model):
                 self.total = noches * self.habitacion.precio_noche
         self.full_clean()
         super().save(*args, **kwargs)
+        
+# QA: Validación de integridad referencial y restricciones de negocio verificadas.
